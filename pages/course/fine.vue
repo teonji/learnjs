@@ -1,6 +1,6 @@
 <template>
   <div class="font-mono h-screen bg-purple-600 text-white overflow-auto">
-    <div class="container p-32 m-auto text-right">
+    <div class="container p-4 md:p-32 m-auto text-right">
       <h1 class="text-6xl pb-16">
         FINE
       </h1>

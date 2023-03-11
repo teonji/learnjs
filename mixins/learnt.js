@@ -37,8 +37,15 @@ export default {
         await this.$router.push(`/course${step.path}`)
       }
     },
-    async goNextStep (step, nextStep) {
-      if (this.isStepNextEnabled(nextStep)) {
+    async goNextStep (step, nextStep, unlock) {
+      if (!nextStep && unlock) {
+        if (this.next) {
+          await this.$router.push(`/course${this.next.path}`)
+        } else {
+          await this.$router.push('/course/fine')
+        }
+        await this.setLearnt()
+      } else if (this.isStepNextEnabled(nextStep)) {
         await this.setLearntCode(step.path)
         await this.$router.push(`/course${nextStep.path}`)
       }

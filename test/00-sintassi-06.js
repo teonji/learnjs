@@ -7,20 +7,15 @@ export default {
   },
   verify () {
     if (typeof getRandomInt === 'undefined') {
-      return 'La funzione getRandomInt non è presente';
+      return 'La funzione getRandomInt non è presente'
     }
     if (typeof random === 'undefined') {
-      return 'la variabile random non è presente';
+      return 'la variabile random non è presente'
     }
     if (random !== 0 && random !== 1 && random !== 2 && random !== 3) {
-      return 'La variabile nome ha un valore sbagliato';
+      return 'La variabile nome ha un valore sbagliato'
     }
-    return null;
+    return null
   },
-  examples: [
-    () => {
-      const nome = 'Matteo';
-      const anni = 49;
-    }
-  ]
+  help () {}
 }

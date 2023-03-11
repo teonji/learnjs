@@ -1,17 +1,16 @@
 <template>
-  <div class="font-mono h-screen bg-purple-600 text-white overflow-auto">
-    <div class="container p-32 m-auto text-right">
+  <div class="font-mono h-screen bg-pink-600 text-white overflow-auto">
+    <div class="container p-4 md:p-32 m-auto">
       <h1 class="text-6xl pb-16">
         // Corso Javascript
       </h1>
       <div v-for="(c, i) in chapters" :key="i" class="pb-8">
         <div
-          :class="isChapterEnabled(c) ? 'cursor-pointer' : 'cursor-not-allowed text-gray-300'"
+          :class="[isChapterEnabled(c) ? 'cursor-pointer' : 'cursor-not-allowed opacity-30']"
           @click="goNextChapter(c)"
         >
           <h2 class="text-xl font-bold">
-            {{ c.title }}
-            <i v-if="isLearnt(c.path)" class="fas fa-star" />
+            // {{ c.title }}
           </h2>
           <p>{{ c.description }}</p>
         </div>
