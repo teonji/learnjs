@@ -18,11 +18,19 @@
       </div>
     </div>
     <div class="container p-4 md:p-32 mt-24 md:mt-0 m-auto">
-      <div class="pb-16">
-        <h1 class="text-4xl font-bold">
-          // {{ chapter.title }}
-          <!--          <i v-if="isLearnt(chapter.path)" class="fas fa-star" />-->
-        </h1>
+      <div class="pb-8">
+        <div class="text-4xl font-bold flex items-center justify-between">
+          <h1>// {{ chapter.title }}</h1>
+          <div class="flex items-center justify-between">
+            <small class="mr-2">Test</small>
+            <div class="w-48 rounded-full h-2.5 bg-gray-700">
+              <div class="h-2.5 rounded-full" :class="testCompleted === 100 ? 'bg-green-500' : 'bg-white'" :style="`width: ${testCompleted}%`" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-full rounded-full h-2.5 bg-gray-700 mb-8">
+        <div class="h-2.5 rounded-full" :class="completed === 100 ? 'bg-green-500' : 'bg-white'" :style="`width: ${completed}%`" />
       </div>
       <div v-for="(s, i) in steps" :key="i" class="pb-8">
         <div
@@ -31,8 +39,7 @@
           @click="goStep(s)"
         >
           <div class="text-xl font-bold flex">
-            <!--            <i v-if="isLearnt(s.path)" class="fas fa-star" />-->
-            // {{ s.title }}
+            //  {{ i + 1 }} - {{ s.title }}
             <svg
               v-if="s.test"
               class="w-8 h-8 ml-4"
@@ -75,6 +82,17 @@ export default {
       }
     } catch (e) {
       return redirect('/course')
+    }
+  },
+  computed: {
+    completed () {
+      const enabled = this.steps.filter(s => this.isStepEnabled(s))
+      return (enabled.length / this.steps.length) * 100
+    },
+    testCompleted () {
+      const withTest = this.steps.filter(s => s.test)
+      const enabledWithTest = withTest.filter(s => this.isStepEnabled(s))
+      return (enabledWithTest.length / withTest.length) * 100
     }
   }
 }

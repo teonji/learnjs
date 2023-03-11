@@ -38,7 +38,7 @@ export default {
       }
     },
     async goNextStep (step, nextStep, unlock) {
-      if (!nextStep && unlock) {
+      if (unlock) {
         if (this.next) {
           await this.$router.push(`/course${this.next.path}`)
         } else {

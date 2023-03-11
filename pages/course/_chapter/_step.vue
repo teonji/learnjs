@@ -20,12 +20,12 @@
               <span class="sr-only">Previous</span>
             </nuxt-link>
             <button
-              :disabled="!nextStep && !unlock"
-              :class="[nextStep && isStepNextEnabled(nextStep) ? 'cursor-pointer bg-blue-600 hover:bg-blue-700' : `text-gray-300 ${unlock ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'cursor-not-allowed bg-red-600 hover:bg-red-700'}`]"
+              :disabled="!nextStep || (step.test && !unlock)"
+              :class="[!step.test ? 'cursor-pointer bg-blue-600 hover:bg-blue-700' : `text-gray-300 ${unlock ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'cursor-not-allowed bg-red-600 hover:bg-red-700'}`]"
               class="inline-flex items-center justify-center p-2.5 mx-2 font-medium rounded-full group focus:ring-4 focus:ring-blue-300 focus:outline-none focus:ring-blue-800"
               @click="goNextStep(step, nextStep, unlock)"
             >
-              <svg v-if="nextStep" class="w-5 h-5 text-white text-gray-300 group-hover:text-gray-900 group-hover:text-white" fill="currentColor" viewBox="0 0 320 512" aria-hidden="true">
+              <svg v-if="!step.test" class="w-5 h-5 text-white text-gray-300 group-hover:text-gray-900 group-hover:text-white" fill="currentColor" viewBox="0 0 320 512" aria-hidden="true">
                 <path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z" fill="currentColor" />
               </svg>
               <svg
@@ -58,7 +58,7 @@
           </svg>
           <span class="sr-only">View chapters</span>
         </button>
-        <div v-if="menu" class="absolute right-0 bottom-28 right-8 z-10 bg-white divide-y divide-gray-100 w-96 rounded-lg shadow w-44 bg-gray-600">
+        <div v-if="menu" class="absolute right-0 bottom-28 right-8 z-10 bg-white divide-y divide-gray-100 w-96 rounded-lg shadow bg-gray-600">
           <ul class="py-2 text-sm text-gray-700 text-gray-200">
             <li v-for="(s, i) in steps" :key="`menu-${i}`" class="flex items-center" :class="steps[i === 0 ? 0 : i - 1].learnt ? 'hover:bg-gray-100 hover:bg-gray-500 hover:text-white' : 'text-gray-500 cursor-not-allowed'">
               <svg
@@ -162,7 +162,7 @@ export default {
       }
       const step = await $content(route.params.chapter, route.params.step).fetch()
       if (step.test) {
-        const fileRest = require(`~/test/${route.params.chapter}-${route.params.step}.js`).default
+        const fileRest = require(`~/test/${route.params.chapter}/${route.params.step}.js`).default
         test = functionStringify(fileRest.step)
         verify = functionStringify(fileRest.verify)
         help = functionStringify(fileRest.help)
@@ -210,7 +210,7 @@ export default {
       if (this.step.test) {
         return !this.hasErrorCode && this.edited && !this.verifyTest
       } else {
-        return true
+        return false
       }
     }
   },
