@@ -10,13 +10,13 @@
 
 <script>
 import learntMixin from '../../mixins/learnt'
-import { getChapters, getLearntCode, getLearntCookie } from '../../utils'
+import { getChapters, getLearntCode, getLearnt } from '../../utils'
 export default {
   name: 'CourseEndPage',
   mixins: [learntMixin],
   async asyncData ({ $content, redirect, req }) {
     try {
-      const learnt = getLearntCookie(req)
+      const learnt = await getLearnt()
       const chapters = await getChapters($content)
       if (!chapters.every(c => learnt.includes(getLearntCode(c.path)))) {
         return redirect('/course')

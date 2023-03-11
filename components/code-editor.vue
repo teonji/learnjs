@@ -1,6 +1,6 @@
 <template>
   <div v-if="loaded" class="h-screen flex flex-col">
-    <button class="absolute right-4 bottom-28 z-20 text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" @click="run">
+    <button v-if="showRun" class="absolute right-4 bottom-28 z-20 text-black bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" @click="run">
       Run
       <svg aria-hidden="true" class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
     </button>
@@ -46,7 +46,8 @@ export default {
       annotations: [],
       innerValue: this.value.replace(/;/g, ''),
       loaded: false,
-      edited: false
+      edited: false,
+      showRun: false
     }
   },
   computed: {
@@ -94,12 +95,15 @@ export default {
       if (event === '') {
         this.annotations = []
       }
+      this.showRun = true
     },
     run () {
+      this.showRun = false
       this.$emit('verify', {
         errors: this.errors,
         verify: this.verifyTest,
-        edited: this.edited
+        edited: this.edited,
+        content: this.innerValue
       })
     },
     async toggleHelp () {

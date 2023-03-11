@@ -24,13 +24,13 @@
 
 <script>
 import learntMixin from '../../mixins/learnt'
-import { getChapters, getLearntCookie } from '../../utils'
+import { getChapters, getLearnt } from '../../utils'
 export default {
   name: 'CoursePage',
   mixins: [learntMixin],
-  async asyncData ({ $content, redirect, req }) {
+  async asyncData ({ $content, redirect }) {
     try {
-      const learnt = getLearntCookie(req)
+      const learnt = await getLearnt()
       const chapters = await getChapters($content)
       return {
         learnt,

@@ -1,19 +1,30 @@
 import crypto from 'crypto'
-import Cookies from 'universal-cookie'
-export const getLearntCookie = (req) => {
-  const cookies = new Cookies(req ? req.headers.cookie : null)
-  return cookies.get('_learnt', { path: '/' }) || []
+// eslint-disable-next-line require-await
+export const getLearnt = async () => {
+  const learnt = localStorage.getItem('learnjs_learnt')
+  if (learnt) {
+    return JSON.parse(localStorage.getItem('learnjs_learnt'))
+  } else {
+    return []
+  }
+}
+export const setLearnt = async (learnt) => {
+  await localStorage.setItem('learnjs_learnt', JSON.stringify(learnt))
+}
+// eslint-disable-next-line require-await
+export const getTest = async (path) => {
+  return localStorage.getItem(`learnjs_learnt_${path}`) || null
+}
+export const setTest = async (data) => {
+  await localStorage.setItem(`learnjs_learnt_${data.path}`, data.content)
 }
 
-export const setLearntCookie = async (learnt) => {
-  const cookies = new Cookies()
-  await cookies.set('_learnt', learnt, { path: '/' })
-}
+// TODO: change name
 export const pushLearntCookie = async (toAdd) => {
-  const learnt = getLearntCookie()
+  const learnt = await getLearnt()
   if (!learnt.includes(toAdd)) {
     learnt.push(toAdd)
-    await setLearntCookie(learnt)
+    await setLearnt(learnt)
   }
   return learnt
 }
@@ -74,7 +85,7 @@ export const functionStringify = fn => fn.toString()
   .join('\n')
 
 export default {
-  getLearntCookie,
+  getLearnt,
   getChapters,
   getSteps,
   getChapter,

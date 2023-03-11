@@ -1,6 +1,6 @@
 <template>
   <div class="font-mono text-xl w-full h-screen text-white px-4 pb-24 pt-12 overflow-auto" :class="[step.test ? 'bg-[#2F3129]' : 'bg-indigo-600']">
-    <div class="fixed bottom-0 left-0 z-50 grid w-full h-24 grid-cols-1 px-8 bg-white border-t border-gray-200 md:grid-cols-3 bg-gray-700 border-gray-600">
+    <div class="fixed bottom-0 left-0 z-50 grid w-full h-24 grid-cols-1 px-8 border-t border-gray-200 md:grid-cols-3 bg-gray-700 border-gray-600">
       <div class="items-center justify-center hidden mr-auto text-gray-500 text-gray-400 md:flex">
         <nuxt-link :to="current.slug" class="p-2.5 group rounded-full hover:bg-gray-100 mr-1 focus:outline-none focus:ring-4 focus:ring-gray-200 focus:ring-gray-600 hover:bg-gray-600">
           <svg class="w-5 h-5 text-gray-500 text-gray-300 group-hover:text-gray-900 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -20,10 +20,10 @@
               <span class="sr-only">Previous</span>
             </nuxt-link>
             <button
-              :disabled="!nextStep || (step.test && !unlock)"
+              :disabled="step.test && !unlock"
               :class="[!step.test ? 'cursor-pointer bg-blue-600 hover:bg-blue-700' : `text-gray-300 ${unlock ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'cursor-not-allowed bg-red-600 hover:bg-red-700'}`]"
               class="inline-flex items-center justify-center p-2.5 mx-2 font-medium rounded-full group focus:ring-4 focus:ring-blue-300 focus:outline-none focus:ring-blue-800"
-              @click="goNextStep(step, nextStep, unlock)"
+              @click="goNextStep(step, nextStep, unlock, content)"
             >
               <svg v-if="!step.test" class="w-5 h-5 text-white text-gray-300 group-hover:text-gray-900 group-hover:text-white" fill="currentColor" viewBox="0 0 320 512" aria-hidden="true">
                 <path d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z" fill="currentColor" />
@@ -131,7 +131,7 @@
       </div>
       <div v-if="step.test" class="md:w-1/2 absolute right-0 top-0">
         <code-editor
-          :value="test"
+          :value="savedTest || test"
           :verify="verify"
           :help="help"
           :next="next"
@@ -144,16 +144,16 @@
 
 <script>
 import learntMixin from '../../../mixins/learnt'
-import { checkChapters, functionStringify, getChapters, getSteps, getLearntCookie } from '../../../utils'
+import { checkChapters, functionStringify, getChapters, getSteps, getLearnt, getTest } from '../../../utils'
 export default {
   name: 'CourseStepsPage',
   mixins: [learntMixin],
-  async asyncData ({ $content, route, redirect, req }) {
+  async asyncData ({ $content, route, redirect }) {
     try {
       let test = null
       let verify = null
       let help = null
-      const learnt = getLearntCookie(req)
+      const learnt = await getLearnt()
       const chapters = await getChapters($content)
       const steps = await getSteps($content, route.params.chapter)
       const redirectChapters = checkChapters(learnt, route.params, chapters, steps)
@@ -172,6 +172,13 @@ export default {
       const prevStep = stepIndex > 0 ? steps[stepIndex - 1] : null
       const nextStep = stepIndex === steps.length - 1 ? null : steps[stepIndex + 1]
       const next = nextStep || chapters[currentChapterIndex + 1]
+
+      let savedTest = null
+      if (step.test) {
+        savedTest = await getTest(step.path.substr(1))
+        console.log(savedTest)
+      }
+
       return {
         learnt,
         steps,
@@ -180,6 +187,9 @@ export default {
         chapters,
         step,
         test,
+        savedTest,
+        edited: !!savedTest,
+        content: savedTest || '', // TODO: unificare con variabile savedTest?
         help,
         verify,
         current: chapters[currentChapterIndex],
@@ -195,7 +205,6 @@ export default {
     return {
       errors: [],
       verifyTest: null,
-      edited: false,
       menu: false
     }
   },
@@ -218,10 +227,11 @@ export default {
     toggleMenu () {
       this.menu = !this.menu
     },
-    verifyCode ({ errors, verify, edited }) {
+    verifyCode ({ errors, verify, edited, content }) {
       this.errors = errors
       this.verifyTest = verify
       this.edited = edited
+      this.content = content
     }
   }
 }

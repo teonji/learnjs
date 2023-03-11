@@ -60,14 +60,14 @@
 </template>
 
 <script>
-import { checkChapters, getChapters, getSteps, getChapter, getLearntCookie } from '../../../utils'
+import { checkChapters, getChapters, getSteps, getChapter, getLearnt } from '../../../utils'
 import learntMixin from '../../../mixins/learnt'
 export default {
   name: 'CourseChapterPage',
   mixins: [learntMixin],
   async asyncData ({ $content, req, route, redirect }) {
     try {
-      const learnt = getLearntCookie(req)
+      const learnt = await getLearnt()
       const chapters = await getChapters($content)
       const redirectChapters = checkChapters(learnt, route.params, chapters)
       if (redirectChapters) {

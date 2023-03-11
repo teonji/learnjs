@@ -1,4 +1,4 @@
-import { getLearntCode, pushLearntCookie } from '../utils'
+import { getLearntCode, pushLearntCookie, setTest } from '../utils'
 
 export default {
   methods: {
@@ -37,13 +37,18 @@ export default {
         await this.$router.push(`/course${step.path}`)
       }
     },
-    async goNextStep (step, nextStep, unlock) {
+    async goNextStep (step, nextStep, unlock, content) {
       if (unlock) {
         if (this.next) {
           await this.$router.push(`/course${this.next.path}`)
         } else {
           await this.$router.push('/course/fine')
         }
+        debugger
+        await setTest({
+          path: step.path.substr(1),
+          content
+        })
         await this.setLearnt()
       } else if (this.isStepNextEnabled(nextStep)) {
         await this.setLearntCode(step.path)
