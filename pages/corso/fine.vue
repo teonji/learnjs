@@ -1,9 +1,18 @@
 <template>
   <div class="font-mono h-screen bg-orange-500 text-white overflow-auto">
-    <div class="container p-4 md:p-32 m-auto text-right">
-      <h1 class="text-6xl pb-16">
+    <div class="container md:p-24 m-auto text-right">
+      <h1 class="text-6xl h-[10vh] pt-4">
         FINE
       </h1>
+      <div class="h-[90vh] md:h-[70vh]">
+        <ace-editor
+          ref="code"
+          :value="innerValue"
+          theme="monokai"
+          lang="javascript"
+          @init="editorInit"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -23,6 +32,56 @@ export default {
       }
     } catch (e) {
       return redirect('/corso')
+    }
+  },
+  data () {
+    return {
+      innerValue: `
+
+
+
+
+       _________        .---"""      """---.
+:______.-':      :  .---------------.  :
+| ______  |      | :                 : |
+|:______B:|      | |  Complimenti:   | |
+|:______B:|      | |                 | |
+|:______B:|      | |  Corso superato | |
+|         |      | |  con successo.  | |
+|:_____:  |      | |                 | |
+|    ==   |      | :                 : |
+|       O |      :  '---------------'  :
+|       o |      :'---...______...---'
+|       o |-._.-i___/'             \\._
+|'-.____o_|   '-.   '-...______...-'  \`-._
+:_________:      \`.____________________   \`-.___.-.
+                 .'.eeeeeeeeeeeeeeeeee.'.      :___:
+               .'.eeeeeeeeeeeeeeeeeeeeee.'.
+              :____________________________:`
+    }
+  },
+  mounted () {
+    const _self = this
+    _self.height = window.innerHeight - 400
+    _self.loaded = true
+
+    _self.$nextTick(() => {
+      _self.$refs.code.editor.getSession().on('changeAnnotation', () => {
+        const annotations = _self.$refs.code.editor.getSession().getAnnotations()
+        _self.annotations = annotations
+        _self.$emit('annotations', annotations)
+      })
+      _self.$refs.code.editor.addEventListener('blur', () => {
+        return this.$emit('input', _self.innerValue)
+      }, true)
+    })
+  },
+  methods: {
+    editorInit () {
+      require('brace/ext/searchbox')
+      require('brace/ext/language_tools')
+      require('brace/mode/javascript')
+      require('brace/theme/monokai')
     }
   }
 }
