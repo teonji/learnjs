@@ -1,69 +1,31 @@
 # learnjs
 
-## Build Setup
+## Corso di JavaScript online in Italiano
 
-```bash
-# install dependencies
-$ yarn install
+Benvenuti al corso di JavaScript online in Italiano! 
 
-# serve with hot reload at localhost:3000
-$ yarn dev
+Questo corso è pensato per chi vuole imparare a programmare in JavaScript partendo dalle basi, senza bisogno di conoscenze pregresse di programmazione.
 
-# build for production and launch server
-$ yarn build
-$ yarn start
+Il corso è stato sviluppato utilizzando il framework Nuxt.js, insieme al modulo nuxt/content per gestire i contenuti.
 
-# generate static project
-$ yarn generate
-```
+Il design è stato realizzato con l'aiuto del framework CSS Tailwind.
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+## Come usare il corso
 
-## Special Directories
+Il corso è organizzato in capitoli, ciascuno dei quali copre un argomento specifico.
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+Ogni capitolo è composto da una breve introduzione seguita da una serie di esempi pratici.
 
-### `assets`
+Per accedere ai contenuti del corso, basta navigare nella directory `content` del progetto.
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+Qui troverete una serie di file Markdown, ciascuno dei quali corrisponde a un capitolo del corso.
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+I test invece delle funzioni javascript all'interno della directory `test`.
 
-### `components`
+## Come eseguire il progetto in locale
+Per eseguire il progetto in locale, seguire i seguenti passi:
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
-
-
-### `pages`
-
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
-
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+- Clonare il repository: git clone https://github.com/teonji/learnjs
+- Installare le dipendenze: `yarn install`
+- Avviare il server di sviluppo: `yarn dev`
+- Aprire il browser e visitare l'indirizzo http://localhost:3000
