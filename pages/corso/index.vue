@@ -21,7 +21,7 @@
       <h1 class="text-3xl md:text-6xl pb-8">
         // Corso Javascript
       </h1>
-      <div v-if="chapters.length" class="w-full rounded-full h-2.5 bg-gray-700 mb-8">
+      <div class="w-full rounded-full h-2.5 bg-gray-700 mb-8">
         <div class="h-2.5 rounded-full" :class="completed === 100 ? 'bg-green-500' : 'bg-white'" :style="`width: ${completed}%`" />
       </div>
       <div v-for="(c, i) in chapters" :key="i" class="pb-8">
@@ -47,10 +47,14 @@ import { getChapters, getLearnt } from '../../utils'
 export default {
   name: 'CorsoPage',
   mixins: [learntMixin],
-  data () {
+  async asyncData ({ $content }) {
+    let learnt = []
+    try {
+      learnt = await getLearnt()
+    } catch (e) {}
     return {
-      learnt: [],
-      chapters: []
+      learnt,
+      chapters: await getChapters($content)
     }
   },
   computed: {
@@ -58,10 +62,6 @@ export default {
       const enabled = this.chapters.filter(c => this.isChapterEnabled(c))
       return (enabled.length / this.chapters.length) * 100
     }
-  },
-  async mounted () {
-    this.learnt = await getLearnt()
-    this.chapters = await getChapters(this.$content)
   }
 }
 </script>
