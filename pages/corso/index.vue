@@ -48,12 +48,8 @@ export default {
   name: 'CorsoPage',
   mixins: [learntMixin],
   async asyncData ({ $content }) {
-    let learnt = []
-    try {
-      learnt = await getLearnt()
-    } catch (e) {}
     return {
-      learnt,
+      learnt: [],
       chapters: await getChapters($content)
     }
   },
@@ -61,6 +57,13 @@ export default {
     completed () {
       const enabled = this.chapters.filter(c => this.isChapterEnabled(c))
       return (enabled.length / this.chapters.length) * 100
+    }
+  },
+  async mounted () {
+    try {
+      this.learnt = await getLearnt()
+    } catch (e) {
+      console.log(e)
     }
   }
 }
