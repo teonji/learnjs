@@ -73,17 +73,19 @@ export default {
   name: 'CorsoChapterPage',
   mixins: [learntMixin],
   async asyncData ({ $content, route, redirect }) {
+    let chapter
+    let steps = []
     try {
-      const chapter = await getChapter($content, route.params.chapter)
-      const steps = await getSteps($content, route.params.chapter)
-      return {
-        loaded: false,
-        learnt: [],
-        chapter: chapter.length ? chapter[0] : null,
-        steps
-      }
+      chapter = await getChapter($content, route.params.chapter)
+      steps = await getSteps($content, route.params.chapter)
     } catch (e) {
       console.log(e)
+    }
+    return {
+      loaded: false,
+      learnt: [],
+      chapter: chapter.length ? chapter[0] : null,
+      steps
     }
   },
   computed: {
