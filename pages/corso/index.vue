@@ -47,16 +47,18 @@ import { getChapters, getLearnt } from '../../utils'
 export default {
   name: 'CorsoPage',
   mixins: [learntMixin],
-  async asyncData ({ $content, redirect }) {
+  async asyncData ({ $content }) {
+    let learnt = []
+    let chapters = []
     try {
-      const learnt = await getLearnt()
-      const chapters = await getChapters($content)
-      return {
-        learnt,
-        chapters
-      }
+      learnt = await getLearnt()
+      chapters = await getChapters($content)
     } catch (e) {
-      return redirect('/')
+      console.log(e)
+    }
+    return {
+      learnt,
+      chapters
     }
   },
   computed: {
