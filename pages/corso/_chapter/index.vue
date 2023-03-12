@@ -2,7 +2,7 @@
   <div class="font-mono h-screen bg-purple-600 text-white overflow-auto">
     <div class="absolute w-full top-0 right-0 left-0">
       <div class="flex pl-4 md:pl-[40px] items-center h-[80px]">
-        <nuxt-link to="/course" class="flex items-center">
+        <nuxt-link to="/corso" class="flex items-center">
           <svg
             class="w-8 h-8 mr-2"
             fill="none"
@@ -63,9 +63,9 @@
 import { checkChapters, getChapters, getSteps, getChapter, getLearnt } from '../../../utils'
 import learntMixin from '../../../mixins/learnt'
 export default {
-  name: 'CourseChapterPage',
+  name: 'corsoChapterPage',
   mixins: [learntMixin],
-  async asyncData ({ $content, req, route, redirect }) {
+  async asyncData ({ $content, route, redirect }) {
     try {
       const learnt = await getLearnt()
       const chapters = await getChapters($content)
@@ -81,7 +81,7 @@ export default {
         steps
       }
     } catch (e) {
-      return redirect('/course')
+      return redirect('/corso')
     }
   },
   computed: {

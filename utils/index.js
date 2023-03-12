@@ -69,12 +69,12 @@ export const checkChapters = (learnt, params, chapters = [], steps = []) => {
   let lastChapterIndexLearnt = chapters.findLastIndex(c => c.learnt)
   lastChapterIndexLearnt += 1
   if (checkChapterIndex > lastChapterIndexLearnt) {
-    return `/course${chapters[lastChapterIndexLearnt].path}`
+    return `/corso${chapters[lastChapterIndexLearnt].path}`
   } else if (checkChapterIndex === lastChapterIndexLearnt) {
     const checkStepIndex = steps.findIndex(s => s.path === `/${params.chapter}/${params.step}`)
     const lastStepIndexLearnt = steps.findLastIndex(c => c.learnt)
     if (checkStepIndex > lastStepIndexLearnt + 1) {
-      return `/course${steps[lastStepIndexLearnt + 1].path}`
+      return `/corso${steps[lastStepIndexLearnt + 1].path}`
     }
   }
 }

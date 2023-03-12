@@ -34,30 +34,29 @@ export default {
     },
     async goNextChapter (step) {
       if (this.isChapterEnabled(step)) {
-        await this.$router.push(`/course${step.path}`)
+        await this.$router.push(`/corso${step.path}`)
       }
     },
     async goNextStep (step, nextStep, unlock, content) {
       if (unlock) {
+        await this.setLearnt()
         if (this.next) {
-          await this.$router.push(`/course${this.next.path}`)
+          await this.$router.push(`/corso${this.next.path}`)
         } else {
-          await this.$router.push('/course/fine')
+          await this.$router.push('/corso/fine')
         }
-        debugger
         await setTest({
           path: step.path.substr(1),
           content
         })
-        await this.setLearnt()
       } else if (this.isStepNextEnabled(nextStep)) {
         await this.setLearntCode(step.path)
-        await this.$router.push(`/course${nextStep.path}`)
+        await this.$router.push(`/corso${nextStep.path}`)
       }
     },
     async goStep (step) {
       if (this.isStepEnabled(step)) {
-        await this.$router.push(`/course${step.path}`)
+        await this.$router.push(`/corso${step.path}`)
       }
     },
     async setLearnt () {

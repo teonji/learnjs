@@ -13,7 +13,7 @@
       <div class="flex items-center w-full">
         <div class="w-full">
           <div class="flex items-center justify-center mx-auto mb-4">
-            <nuxt-link :to="prevStep ? `/course${prevStep.path}` : `/course${current.path}`" class="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 focus:ring-gray-600 hover:bg-gray-600">
+            <nuxt-link :to="prevStep ? `/corso${prevStep.path}` : `/corso${current.path}`" class="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 focus:ring-gray-600 hover:bg-gray-600">
               <svg class="w-5 h-5 text-gray-500 text-gray-300 group-hover:text-gray-900 group-hover:text-white" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true">
                 <path d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z" fill="currentColor" />
               </svg>
@@ -72,7 +72,7 @@
               >
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
               </svg>
-              <nuxt-link v-if="steps[i === 0 ? 0 : i - 1].learnt" :to="`/course${s.path}`" class="block px-4 py-2">
+              <nuxt-link v-if="steps[i === 0 ? 0 : i - 1].learnt" :to="`/corso${s.path}`" class="block px-4 py-2">
                 {{ s.title }}
               </nuxt-link>
               <span v-else class="block px-4 py-2">
@@ -146,7 +146,7 @@
 import learntMixin from '../../../mixins/learnt'
 import { checkChapters, functionStringify, getChapters, getSteps, getLearnt, getTest } from '../../../utils'
 export default {
-  name: 'CourseStepsPage',
+  name: 'corsoStepsPage',
   mixins: [learntMixin],
   async asyncData ({ $content, route, redirect }) {
     try {
@@ -176,7 +176,6 @@ export default {
       let savedTest = null
       if (step.test) {
         savedTest = await getTest(step.path.substr(1))
-        console.log(savedTest)
       }
 
       return {
@@ -198,7 +197,7 @@ export default {
         nextStep
       }
     } catch (e) {
-      return redirect(`/course/${route.params.chapter}`)
+      return redirect(`/corso/${route.params.chapter}`)
     }
   },
   data () {
