@@ -83,7 +83,7 @@ export default {
         steps
       }
     } catch (e) {
-      return redirect('/corso')
+      console.log(e)
     }
   },
   computed: {
