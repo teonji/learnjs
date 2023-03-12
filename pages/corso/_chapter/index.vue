@@ -70,7 +70,7 @@
 import { checkChapters, getChapters, getSteps, getChapter, getLearnt } from '../../../utils'
 import learntMixin from '../../../mixins/learnt'
 export default {
-  name: 'corsoChapterPage',
+  name: 'CorsoChapterPage',
   mixins: [learntMixin],
   async asyncData ({ $content, route, redirect }) {
     try {
