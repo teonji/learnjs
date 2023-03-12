@@ -26,7 +26,7 @@
 import learntMixin from '../../mixins/learnt'
 import { getChapters, getLearnt } from '../../utils'
 export default {
-  name: 'CoursePage',
+  name: 'CorsoPage',
   mixins: [learntMixin],
   async asyncData ({ $content, redirect }) {
     try {
