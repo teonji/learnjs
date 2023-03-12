@@ -1,6 +1,6 @@
 <template>
-  <div class="font-mono text-xl w-full h-screen text-white px-4 pb-24 pt-12 overflow-auto" :class="[step.test ? 'bg-[#2F3129]' : 'bg-indigo-600']">
-    <div class="fixed bottom-0 left-0 z-50 grid w-full h-24 grid-cols-1 px-8 border-t border-gray-200 md:grid-cols-3 bg-gray-700 border-gray-600">
+  <div class="font-mono text-xl w-full h-screen text-white px-4 pb-24 pt-12 overflow-auto" :class="[step && step.test ? 'bg-[#2F3129]' : 'bg-indigo-600']">
+    <div v-if="step" class="fixed bottom-0 left-0 z-50 grid w-full h-24 grid-cols-1 px-8 border-t border-gray-200 md:grid-cols-3 bg-gray-700 border-gray-600">
       <div class="items-center justify-center hidden mr-auto text-gray-500 text-gray-400 md:flex">
         <nuxt-link :to="current.slug" class="p-2.5 group rounded-full hover:bg-gray-100 mr-1 focus:outline-none focus:ring-4 focus:ring-gray-200 focus:ring-gray-600 hover:bg-gray-600">
           <svg class="w-5 h-5 text-gray-500 text-gray-300 group-hover:text-gray-900 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -93,7 +93,7 @@
       </ul>
     </div>
 
-    <div class="md:flex">
+    <div v-if="step" class="md:flex">
       <div :class="[step.test ? 'md:w-1/2 md:pr-8 md:pl-4' : 'w-full md:mx-[100px] md:pr-[40px]']">
         <div class="nuxt-content">
           <h1>{{ step.title }}</h1>
@@ -157,60 +157,25 @@ import { checkChapters, functionStringify, getChapters, getSteps, getLearnt, get
 export default {
   name: 'CorsoStepsPage',
   mixins: [learntMixin],
-  async asyncData ({ $content, route, redirect }) {
-    try {
-      let test = null
-      let verify = null
-      let help = null
-      const learnt = await getLearnt()
-      const chapters = await getChapters($content)
-      const steps = await getSteps($content, route.params.chapter)
-      const redirectChapters = checkChapters(learnt, route.params, chapters, steps)
-      if (redirectChapters) {
-        return redirect(redirectChapters)
-      }
-      const step = await $content(route.params.chapter, route.params.step).fetch()
-      if (step.test) {
-        const fileRest = require(`~/test/${route.params.chapter}/${route.params.step}.js`).default
-        test = functionStringify(fileRest.step)
-        verify = functionStringify(fileRest.verify)
-        help = functionStringify(fileRest.help)
-      }
-      const currentChapterIndex = chapters.findIndex(chapter => chapter.slug === route.params.chapter)
-      const stepIndex = steps.findIndex(step => step.slug === route.params.step)
-      const prevStep = stepIndex > 0 ? steps[stepIndex - 1] : null
-      const nextStep = stepIndex === steps.length - 1 ? null : steps[stepIndex + 1]
-      const next = nextStep || chapters[currentChapterIndex + 1]
-
-      let savedTest = null
-      if (step.test) {
-        savedTest = await getTest(step.path.substr(1))
-      }
-
-      return {
-        learnt,
-        steps,
-        chapter: route.params.chapter,
-        stepIndex,
-        chapters,
-        step,
-        test,
-        savedTest,
-        edited: !!savedTest,
-        content: savedTest || '', // TODO: unificare con variabile savedTest?
-        help,
-        verify,
-        current: chapters[currentChapterIndex],
-        next,
-        prevStep,
-        nextStep
-      }
-    } catch (e) {
-      return redirect(`/corso/${route.params.chapter}`)
-    }
-  },
   data () {
     return {
+      learnt: [],
+      steps: [],
+      chapter: null,
+      stepIndex: -1,
+      chapters: [],
+      step: null,
+      test: null,
+      savedTest: '',
+      edited: false,
+      content: '', // TODO: unificare con variabile savedTest?
+      help: '',
+      verify: null,
+      current: null,
+      next: null,
+      prevStep: null,
+      nextStep: null,
+
       errors: [],
       verifyTest: null,
       menu: false
@@ -229,6 +194,56 @@ export default {
       } else {
         return false
       }
+    }
+  },
+  async mounted () {
+    try {
+      let test = null
+      let verify = null
+      let help = null
+      const learnt = await getLearnt()
+      const chapters = await getChapters(this.$content)
+      const steps = await getSteps(this.$content, this.$route.params.chapter)
+      const redirectChapters = checkChapters(learnt, this.$route.params, chapters, steps)
+      if (redirectChapters) {
+        return this.$router.push(redirectChapters)
+      }
+      const step = await this.$content(this.$route.params.chapter, this.$route.params.step).fetch()
+      if (step.test) {
+        const fileRest = require(`~/test/${this.$route.params.chapter}/${this.$route.params.step}.js`).default
+        test = functionStringify(fileRest.step)
+        verify = functionStringify(fileRest.verify)
+        help = functionStringify(fileRest.help)
+      }
+      const currentChapterIndex = chapters.findIndex(chapter => chapter.slug === this.$route.params.chapter)
+      const stepIndex = steps.findIndex(step => step.slug === this.$route.params.step)
+      const prevStep = stepIndex > 0 ? steps[stepIndex - 1] : null
+      const nextStep = stepIndex === steps.length - 1 ? null : steps[stepIndex + 1]
+      const next = nextStep || chapters[currentChapterIndex + 1]
+
+      let savedTest = null
+      if (step.test) {
+        savedTest = await getTest(step.path.substr(1))
+      }
+
+      this.learnt = learnt
+      this.steps = steps
+      this.chapter = this.$route.params.chapter
+      this.stepIndex = stepIndex
+      this.chapters = chapters
+      this.step = step
+      this.test = test
+      this.savedTest = savedTest
+      this.edited = !!savedTest
+      this.content = savedTest || '' // TODO: unificare con variabile savedTest?
+      this.help = help
+      this.verify = verify
+      this.current = chapters[currentChapterIndex]
+      this.next = next
+      this.prevStep = prevStep
+      this.nextStep = nextStep
+    } catch (e) {
+      return this.$router.push(`/corso/${this.$route.params.chapter}`)
     }
   },
   methods: {

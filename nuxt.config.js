@@ -2,14 +2,14 @@ export default {
   target: 'static',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'learnjs',
+    title: 'Corso di Javascript online in Italiano',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'it'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'Diventa uno sviluppatore JavaScript in pochi passi con questo corso base online!' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [

@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="container p-4 pt-24 md:p-32 m-auto">
+    <div v-if="chapter" class="container p-4 pt-24 md:p-32 m-auto">
       <div class="pb-8">
         <div class="text-3xl md:text-6xl font-bold flex items-center justify-between">
           <h1>// {{ chapter.title }}</h1>
@@ -72,23 +72,11 @@ import learntMixin from '../../../mixins/learnt'
 export default {
   name: 'CorsoChapterPage',
   mixins: [learntMixin],
-  async asyncData ({ $content, route, redirect }) {
-    try {
-      const learnt = await getLearnt()
-      const chapters = await getChapters($content)
-      const redirectChapters = checkChapters(learnt, route.params, chapters)
-      if (redirectChapters) {
-        return redirect(redirectChapters)
-      }
-      const chapter = await getChapter($content, route.params.chapter)
-      const steps = await getSteps($content, route.params.chapter)
-      return {
-        learnt,
-        chapter: chapter.length ? chapter[0] : null,
-        steps
-      }
-    } catch (e) {
-      return redirect('/corso')
+  data () {
+    return {
+      learnt: [],
+      chapter: null,
+      steps: []
     }
   },
   computed: {
@@ -100,6 +88,23 @@ export default {
       const withTest = this.steps.filter(s => s.test)
       const enabledWithTest = withTest.filter(s => this.isStepEnabled(s))
       return (enabledWithTest.length / withTest.length) * 100
+    }
+  },
+  async mounted () {
+    try {
+      const learnt = await getLearnt()
+      const chapters = await getChapters(this.$content)
+      const redirectChapters = checkChapters(learnt, this.$route.params, chapters)
+      if (redirectChapters) {
+        return this.$router.push(redirectChapters)
+      }
+      const chapter = await getChapter(this.$content, this.$route.params.chapter)
+      const steps = await getSteps(this.$content, this.$route.params.chapter)
+      this.learnt = learnt
+      this.chapter = chapter.length ? chapter[0] : null
+      this.steps = steps
+    } catch (e) {
+      await this.$router.push('/corso')
     }
   }
 }

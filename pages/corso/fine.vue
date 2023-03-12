@@ -60,22 +60,6 @@ export default {
               :____________________________:`
     }
   },
-  mounted () {
-    const _self = this
-    _self.height = window.innerHeight - 400
-    _self.loaded = true
-
-    _self.$nextTick(() => {
-      _self.$refs.code.editor.getSession().on('changeAnnotation', () => {
-        const annotations = _self.$refs.code.editor.getSession().getAnnotations()
-        _self.annotations = annotations
-        _self.$emit('annotations', annotations)
-      })
-      _self.$refs.code.editor.addEventListener('blur', () => {
-        return this.$emit('input', _self.innerValue)
-      }, true)
-    })
-  },
   methods: {
     editorInit () {
       require('brace/ext/searchbox')
