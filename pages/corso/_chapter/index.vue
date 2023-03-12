@@ -23,11 +23,11 @@
         </div>
       </div>
     </div>
-    <div class="container p-4 pt-24 md:p-32 m-auto">
+    <div v-if="loaded" class="container p-4 pt-24 md:p-32 m-auto">
       <div class="pb-8">
         <div class="text-3xl md:text-6xl font-bold flex items-center justify-between">
           <h1>// {{ chapter.title }}</h1>
-          <div class="hidden md:block flex items-center justify-between">
+          <div class="hidden md:flex items-center justify-between text-xl">
             <small class="mr-2">Test</small>
             <div class="w-48 rounded-full h-2.5 bg-gray-700">
               <div class="h-2.5 rounded-full" :class="testCompleted === 100 ? 'bg-green-500' : 'bg-white'" :style="`width: ${testCompleted}%`" />
@@ -74,16 +74,11 @@ export default {
   mixins: [learntMixin],
   async asyncData ({ $content, route, redirect }) {
     try {
-      const learnt = await getLearnt()
-      const chapters = await getChapters($content)
-      const redirectChapters = checkChapters(learnt, route.params, chapters)
-      if (redirectChapters) {
-        return redirect(redirectChapters)
-      }
       const chapter = await getChapter($content, route.params.chapter)
       const steps = await getSteps($content, route.params.chapter)
       return {
-        learnt,
+        loaded: false,
+        learnt: [],
         chapter: chapter.length ? chapter[0] : null,
         steps
       }
@@ -101,6 +96,16 @@ export default {
       const enabledWithTest = withTest.filter(s => this.isStepEnabled(s))
       return (enabledWithTest.length / withTest.length) * 100
     }
+  },
+  async mounted () {
+    const learnt = await getLearnt()
+    const chapters = await getChapters(this.$content)
+    const redirectChapters = checkChapters(learnt, this.$route.params, chapters)
+    if (redirectChapters) {
+      await this.$router.push(redirectChapters)
+    }
+    this.loaded = true
+    this.learnt = learnt
   }
 }
 </script>
