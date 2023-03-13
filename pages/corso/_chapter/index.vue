@@ -78,6 +78,8 @@ export default {
     try {
       console.log(route.params.chapter)
       chapter = await getChapter($content, route.params.chapter)
+      console.log('chapter')
+      console.log('chapter->', chapter)
       steps = await getSteps($content, route.params.chapter)
       console.log({
         chapter,
