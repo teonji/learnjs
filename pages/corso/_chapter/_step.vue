@@ -162,7 +162,7 @@ export default {
       let test = null
       let verify = null
       let help = null
-      const learnt = await getLearnt()
+      const learnt = getLearnt()
       const chapters = await getChapters($content)
       const steps = await getSteps($content, route.params.chapter)
       const redirectChapters = checkChapters(learnt, route.params, chapters, steps)

@@ -59,9 +59,9 @@ export default {
       return (enabled.length / this.chapters.length) * 100
     }
   },
-  async mounted () {
+  mounted () {
     try {
-      this.learnt = await getLearnt()
+      this.learnt = getLearnt()
     } catch (e) {
       console.log(e)
     }

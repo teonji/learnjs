@@ -76,15 +76,20 @@ export default {
     let chapter
     let steps = []
     try {
+      console.log(route.params.chapter)
       chapter = await getChapter($content, route.params.chapter)
       steps = await getSteps($content, route.params.chapter)
+      console.log({
+        chapter,
+        steps
+      })
     } catch (e) {
       console.log(e)
     }
     return {
       loaded: false,
       learnt: [],
-      chapter: chapter.length ? chapter[0] : null,
+      chapter: chapter && chapter.length ? chapter[0] : null,
       steps
     }
   },
@@ -100,7 +105,7 @@ export default {
     }
   },
   async mounted () {
-    const learnt = await getLearnt()
+    const learnt = getLearnt()
     const chapters = await getChapters(this.$content)
     const redirectChapters = checkChapters(learnt, this.$route.params, chapters)
     if (redirectChapters) {

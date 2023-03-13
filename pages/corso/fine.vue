@@ -25,7 +25,7 @@ export default {
   mixins: [learntMixin],
   async asyncData ({ $content, redirect }) {
     try {
-      const learnt = await getLearnt()
+      const learnt = getLearnt()
       const chapters = await getChapters($content)
       if (!chapters.every(c => learnt.includes(getLearntCode(c.path)))) {
         return redirect('/corso')

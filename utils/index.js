@@ -1,27 +1,26 @@
 import crypto from 'crypto'
-// eslint-disable-next-line require-await
-export const getLearnt = async () => {
+export const getLearnt = () => {
   const learnt = localStorage.getItem('learnjs_learnt')
   if (learnt) {
-    return JSON.parse(localStorage.getItem('learnjs_learnt'))
+    return JSON.parse(learnt)
   } else {
     return []
   }
 }
-export const setLearnt = async (learnt) => {
-  await localStorage.setItem('learnjs_learnt', JSON.stringify(learnt))
+export const setLearnt = (learnt) => {
+  localStorage.setItem('learnjs_learnt', JSON.stringify(learnt))
 }
 // eslint-disable-next-line require-await
-export const getTest = async (path) => {
+export const getTest = (path) => {
   return localStorage.getItem(`learnjs_learnt_${path}`) || null
 }
-export const setTest = async (data) => {
-  await localStorage.setItem(`learnjs_learnt_${data.path}`, data.content)
+export const setTest = (data) => {
+  localStorage.setItem(`learnjs_learnt_${data.path}`, data.content)
 }
 
 // TODO: change name
 export const pushLearntCookie = async (toAdd) => {
-  const learnt = await getLearnt()
+  const learnt = getLearnt()
   if (!learnt.includes(toAdd)) {
     learnt.push(toAdd)
     await setLearnt(learnt)
@@ -37,7 +36,7 @@ export const getChapters = async ($content) => {
 }
 
 export const getSteps = async ($content, chapter) => {
-  return await $content(chapter)
+  return await $content(`/${chapter}`)
     .only(['title', 'description', 'slug', 'path', 'test'])
     .sortBy('path')
     .fetch()
